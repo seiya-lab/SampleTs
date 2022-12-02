@@ -1,16 +1,37 @@
-class Camera {
+class CameraHandler{
 	name: string;
 	
 	constructor(name: string){
 		this.name = name;
 	}
-	
-	sayHello(){
-		return `Camera is ${this.name}.`;
-	}
+
+    playVideo(){
+        const video = <HTMLMediaElement>document.getElementById(this.name);
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+        }).then(stream => {
+            video.srcObject = stream;
+            video.play()
+        }).catch(e => {
+          console.log(e)
+        }) 
+    }
 } 
 
-let p = new Camera('OK');
-let s = p.sayHello();
+// const video = document.getElementById("video")
+// navigator.mediaDevices.getUserMedia({
+//     video: true,
+//     audio: false,
+// }).then(stream => {
+//     video.srcObject = stream;
+//     video.play()
+// }).catch(e => {
+//   console.log(e)
+// })
 
-document.getElementById('div1').innerHTML = s;
+let p = new CameraHandler('video')
+p.playVideo();
+// let s = p.sayHello();
+
+// document.getElementById('div1').innerHTML = s;
