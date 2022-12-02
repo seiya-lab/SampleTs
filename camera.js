@@ -1,9 +1,12 @@
-var CameraHandler = /** @class */ (function () {
-    function CameraHandler(name) {
-        this.name = name;
+var VideoHandler = /** @class */ (function () {
+    function VideoHandler() {
+        this.playVideo();
     }
-    CameraHandler.prototype.playVideo = function () {
-        var video = document.getElementById(this.name);
+    VideoHandler.prototype.startVideoRecording = function () { };
+    VideoHandler.prototype.stopVideoRecording = function () { };
+    VideoHandler.prototype.downloadVideo = function () { };
+    VideoHandler.prototype.playVideo = function () {
+        var video = document.getElementById("video");
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: false
@@ -14,19 +17,6 @@ var CameraHandler = /** @class */ (function () {
             console.log(e);
         });
     };
-    return CameraHandler;
+    return VideoHandler;
 }());
-// const video = document.getElementById("video")
-// navigator.mediaDevices.getUserMedia({
-//     video: true,
-//     audio: false,
-// }).then(stream => {
-//     video.srcObject = stream;
-//     video.play()
-// }).catch(e => {
-//   console.log(e)
-// })
-var p = new CameraHandler('video');
-p.playVideo();
-// let s = p.sayHello();
-// document.getElementById('div1').innerHTML = s;
+new VideoHandler();
