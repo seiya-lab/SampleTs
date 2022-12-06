@@ -1,23 +1,38 @@
 <!DOCTYPE html>
-<html lang="ja">
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html lang="jp">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrackThink Camera</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TrackThink VideoRecorder</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
-        <h1>TrackThink Camera Sample</h1>
-        <div>
-            <video id="video"></video>
-        </div>
+  <div id="container">
 
-        <div>
-            <button id="start" disabled>録画開始</button>
-            <button id="stop" disabled>録画停止</button>
-        </div> 
-    </div> 
- 
-    <script src="camera.js"></script> 
+    <h1>TrackThink VideoRecorder</h1>
+
+    <video id="local" playsinline autoplay muted></video>
+    <video id="recorded" playsinline loop></video>
+
+    <div>
+      <button id="start">映像を取得する</button>
+      <button id="record" disabled>録画開始</button>
+      <button id="play" disabled>再生</button>
+      <button id="download" disabled>ダウンロード</button>
+    </div>
+
+  <!-- include adapter for srcObject shim -->
+  <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
+  <script src="./camera.js" async></script>
+
+  </div>
 </body>
 </html>
