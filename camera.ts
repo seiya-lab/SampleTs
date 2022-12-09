@@ -74,19 +74,21 @@ class VideoHandler{
     }
 
     private handleDataAvailable(event): void{
+        this.recordedBlobs = [];
         if (event.data && event.data.size > 0){
+            console.log(event.data);
             this.recordedBlobs.push(event.data);
         }
     }
 
     private startRecording(): void{
-        this.recordedBlobs = [];
+        // this.recordedBlobs = [];
         const options = { mimeType: "video/webm;codecs=vp9"};
 
         try {
             this.mediaRecorder = new MediaRecorder((window as any).stream, options);
         } catch (error){
-            console.log('Exception whil creating MediaRecorder: ${error}');
+            console.log('Exception while creating MediaRecorder: ${error}');
             return;
         }
 
@@ -109,18 +111,6 @@ class VideoHandler{
         console.log("Recorded media.");
     }
 
-    // // 動画を再生する
-    // private playVideo(): void{
-    //     navigator.mediaDevices.getUserMedia({
-    //         video: true,
-    //         audio: false,
-    //     }).then(stream => {
-    //         this.video.srcObject = stream;
-    //         this.video.play()
-    //     }).catch(e => {
-    //       console.log(e)
-    //     }) 
-    // }
 } 
 
 new VideoHandler();
