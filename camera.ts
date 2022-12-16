@@ -9,9 +9,11 @@ class VideoHandler{
     private downloadBtn = <HTMLInputElement>document.getElementById("download"); 
 
     private mediaRecorder;
-    private recordedBlobs;
+    // private recordedBlobs:BlobPart[] = [];
+    private recordedBlobs:any = [];
 
 	constructor(){
+
         this.startBtn.addEventListener("click", () => {
             const constraints = {
                 video: {
@@ -28,9 +30,9 @@ class VideoHandler{
 
         this.recordBtn.addEventListener("click", () => {
             if (this.recordBtn.textContent === "録画開始") {
-              this.startRecording();
+              this.startRecording(this.recordedBlobs);
             } else {
-              this.stopRecording();
+              this.stopRecording(this.recordedBlobs);
               this.recordBtn.textContent = "録画開始";
               this.playBtn.disabled = false;
               this.downloadBtn.disabled = false;
@@ -38,12 +40,19 @@ class VideoHandler{
         });
 
         this.playBtn.addEventListener("click", () => {
-            const superBuffer = new Blob(this.recordedBlobs, { type: "video/webm" });
-            this.recordedVideo.src = "";
-            this.recordedVideo.srcObject = null;
-            this.recordedVideo.src = window.URL.createObjectURL(superBuffer);
-            this.recordedVideo.controls = true;
-            this.recordedVideo.play();
+            console.log("play", this.recordedBlobs)
+            try {
+                const superBuffer = new Blob(this.recordedBlobs, { type: "video/webm" });
+                this.recordedVideo.src = "";
+                this.recordedVideo.srcObject = null;
+                this.recordedVideo.src = window.URL.createObjectURL(superBuffer);
+                this.recordedVideo.controls = true;
+                this.recordedVideo.play();                
+            } catch (error) {
+                console.log("error");
+                console.log(error);
+            }
+
           });
 
         this.downloadBtn.addEventListener("click", () => {
@@ -73,16 +82,16 @@ class VideoHandler{
         console.log('navigator.getUserMedia Error:', error)
     }
 
-    private handleDataAvailable(event): void{
-        this.recordedBlobs = [];
+    private handleDataAvailable(event, recordedBlobs:any): void{
+        console.log(recordedBlobs);
         if (event.data && event.data.size > 0){
             console.log(event.data);
-            this.recordedBlobs.push(event.data);
+            recordedBlobs.push(event.data);
         }
     }
 
-    private startRecording(): void{
-        // this.recordedBlobs = [];
+    private startRecording(recordedBlobs:any): void{
+        // recordedBlobs = [];
         const options = { mimeType: "video/webm;codecs=vp9"};
 
         try {
@@ -101,14 +110,15 @@ class VideoHandler{
             console.log("Recorder stopped: ", event);
         };
 
-        this.mediaRecorder.ondataavailable = this.handleDataAvailable;
+        this.mediaRecorder.ondataavailable = (e) => this.handleDataAvailable(e, recordedBlobs);
         this.mediaRecorder.start(10);
         console.log("MediaRecorder started", this.mediaRecorder);
     }
 
-    private stopRecording(): void{
+    private stopRecording(recordedBlobs): void{
         this.mediaRecorder.stop();
         console.log("Recorded media.");
+        console.log("stop:", recordedBlobs);
     }
 
 } 
