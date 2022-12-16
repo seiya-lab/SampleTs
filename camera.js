@@ -8,7 +8,6 @@ var VideoHandler = /** @class */ (function () {
         this.recordBtn = document.getElementById("record");
         this.playBtn = document.getElementById("play");
         this.downloadBtn = document.getElementById("download");
-        // private recordedBlobs:BlobPart[] = [];
         this.recordedBlobs = [];
         this.startBtn.addEventListener("click", function () {
             var constraints = {
@@ -23,6 +22,7 @@ var VideoHandler = /** @class */ (function () {
         });
         this.recordBtn.addEventListener("click", function () {
             if (_this.recordBtn.textContent === "録画開始") {
+                _this.recordedBlobs = [];
                 _this.startRecording(_this.recordedBlobs);
             }
             else {
@@ -33,19 +33,12 @@ var VideoHandler = /** @class */ (function () {
             }
         });
         this.playBtn.addEventListener("click", function () {
-            console.log("play", _this.recordedBlobs);
-            try {
-                var superBuffer = new Blob(_this.recordedBlobs, { type: "video/webm" });
-                _this.recordedVideo.src = "";
-                _this.recordedVideo.srcObject = null;
-                _this.recordedVideo.src = window.URL.createObjectURL(superBuffer);
-                _this.recordedVideo.controls = true;
-                _this.recordedVideo.play();
-            }
-            catch (error) {
-                console.log("error");
-                console.log(error);
-            }
+            var superBuffer = new Blob(_this.recordedBlobs, { type: "video/webm" });
+            _this.recordedVideo.src = "";
+            _this.recordedVideo.srcObject = null;
+            _this.recordedVideo.src = window.URL.createObjectURL(superBuffer);
+            _this.recordedVideo.controls = true;
+            _this.recordedVideo.play();
         });
         this.downloadBtn.addEventListener("click", function () {
             var blob = new Blob(_this.recordedBlobs, { type: "video/webm" });
@@ -64,7 +57,6 @@ var VideoHandler = /** @class */ (function () {
     }
     VideoHandler.prototype.getLocalMediaStream = function (mediaStream) {
         this.recordBtn.disabled = false;
-        var localStream = mediaStream;
         this.localVideo.srcObject = mediaStream;
         window.stream = mediaStream;
     };
@@ -72,15 +64,12 @@ var VideoHandler = /** @class */ (function () {
         console.log('navigator.getUserMedia Error:', error);
     };
     VideoHandler.prototype.handleDataAvailable = function (event, recordedBlobs) {
-        console.log(recordedBlobs);
         if (event.data && event.data.size > 0) {
-            console.log(event.data);
             recordedBlobs.push(event.data);
         }
     };
     VideoHandler.prototype.startRecording = function (recordedBlobs) {
         var _this = this;
-        // recordedBlobs = [];
         var options = { mimeType: "video/webm;codecs=vp9" };
         try {
             this.mediaRecorder = new MediaRecorder(window.stream, options);
@@ -103,7 +92,6 @@ var VideoHandler = /** @class */ (function () {
     VideoHandler.prototype.stopRecording = function (recordedBlobs) {
         this.mediaRecorder.stop();
         console.log("Recorded media.");
-        console.log("stop:", recordedBlobs);
     };
     return VideoHandler;
 }());
